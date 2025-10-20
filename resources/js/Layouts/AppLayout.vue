@@ -1,113 +1,69 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import { ref, onMounted } from 'vue';
-import { useDarkMode } from '@/Composables/useDarkMode';
+import { ref } from 'vue';
 
+// État du menu mobile
 const mobileMenuOpen = ref(false);
-const { isDark, toggleDarkMode, initTheme } = useDarkMode();
-
-onMounted(() => {
-    initTheme();
-});
 </script>
 
 <template>
-    <div class="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-200">
+    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
         <!-- Navigation -->
-        <nav class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800">
+        <nav class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <!-- Logo -->
-                    <div class="flex items-center space-x-8">
+                    <div class="flex items-center">
                         <Link href="/" class="flex items-center space-x-2">
-                            <div class="w-9 h-9 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white dark:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                </svg>
+                            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                                <span class="text-white font-bold text-xl">✒️</span>
                             </div>
-                            <span class="text-xl font-light text-gray-900 dark:text-white tracking-tight">
+                            <span class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                                 MiniBlog
                             </span>
                         </Link>
-
-                        <!-- Navigation Links Desktop -->
-                        <div class="hidden md:flex items-center space-x-1">
-                            <Link href="/" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-lg text-sm font-light transition-colors">
-                                Accueil
-                            </Link>
-                            <Link href="/articles" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-lg text-sm font-light transition-colors">
-                                Articles
-                            </Link>
-                            <Link href="/categories" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-lg text-sm font-light transition-colors">
-                                Catégories
-                            </Link>
-                        </div>
                     </div>
 
-                    <!-- Navigation Desktop Right -->
-                    <div class="hidden md:flex items-center space-x-3">
-                        <!-- Dark Mode Toggle -->
-                        <button
-                            @click="toggleDarkMode"
-                            class="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                            aria-label="Toggle dark mode"
-                        >
-                            <svg v-if="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                            </svg>
-                            <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                        </button>
+                    <!-- Navigation Desktop -->
+                    <div class="hidden md:flex items-center space-x-4">
+                        <Link href="/" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Accueil
+                        </Link>
 
                         <template v-if="$page.props.auth.user">
-                            <Link
+                            <!-- Si l'utilisateur est admin ou rédacteur -->
+                            <Link 
                                 v-if="$page.props.auth.user.role === 'admin' || $page.props.auth.user.role === 'writer'"
-                                href="/admin/dashboard"
-                                class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-lg text-sm font-light transition-colors"
+                                href="/admin/dashboard" 
+                                class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
                             >
                                 Dashboard
                             </Link>
 
-                            <Link href="/profile" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-lg text-sm font-light transition-colors">
+                            <Link href="/profile" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors">
                                 Profil
                             </Link>
 
-                            <Link href="/logout" method="post" as="button" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 rounded-lg text-sm font-light hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
+                            <Link href="/logout" method="post" as="button" class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all">
                                 Déconnexion
                             </Link>
                         </template>
 
                         <template v-else>
-                            <Link href="/login" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-lg text-sm font-light transition-colors">
+                            <Link href="/login" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors">
                                 Connexion
                             </Link>
-                            <Link href="/register" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 rounded-lg text-sm font-light hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
+                            <Link href="/register" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all">
                                 Inscription
                             </Link>
                         </template>
                     </div>
 
                     <!-- Bouton menu mobile -->
-                    <div class="md:hidden flex items-center space-x-2">
-                        <!-- Dark Mode Toggle Mobile -->
-                        <button
-                            @click="toggleDarkMode"
-                            class="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                            aria-label="Toggle dark mode"
-                        >
-                            <svg v-if="!isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                            </svg>
-                            <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                        </button>
-
-                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path v-if="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                                <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    <div class="md:hidden flex items-center">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-indigo-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
                         </button>
                     </div>
@@ -115,38 +71,31 @@ onMounted(() => {
             </div>
 
             <!-- Menu Mobile -->
-            <div v-if="mobileMenuOpen" class="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-                <div class="px-4 pt-2 pb-3 space-y-1">
-                    <Link href="/" class="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm font-light">
+            <div v-if="mobileMenuOpen" class="md:hidden bg-white border-t border-gray-100">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <Link href="/" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                         Accueil
                     </Link>
-                    <Link href="/articles" class="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm font-light">
-                        Articles
-                    </Link>
-                    <Link href="/categories" class="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm font-light">
-                        Catégories
-                    </Link>
-
                     <template v-if="$page.props.auth.user">
-                        <Link
+                        <Link 
                             v-if="$page.props.auth.user.role === 'admin' || $page.props.auth.user.role === 'writer'"
-                            href="/admin/dashboard"
-                            class="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm font-light"
+                            href="/admin/dashboard" 
+                            class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
                         >
                             Dashboard
                         </Link>
-                        <Link href="/profile" class="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm font-light">
+                        <Link href="/profile" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                             Profil
                         </Link>
-                        <Link href="/logout" method="post" as="button" class="block w-full text-left px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm font-light">
+                        <Link href="/logout" method="post" as="button" class="block w-full text-left px-3 py-2 rounded-lg text-red-600 hover:bg-red-50">
                             Déconnexion
                         </Link>
                     </template>
                     <template v-else>
-                        <Link href="/login" class="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm font-light">
+                        <Link href="/login" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                             Connexion
                         </Link>
-                        <Link href="/register" class="block px-3 py-2 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 text-sm font-light">
+                        <Link href="/register" class="block px-3 py-2 rounded-lg text-white bg-indigo-600 hover:bg-indigo-700">
                             Inscription
                         </Link>
                     </template>
@@ -155,17 +104,15 @@ onMounted(() => {
         </nav>
 
         <!-- Contenu principal -->
-        <main class="py-8 px-4 sm:px-6 lg:px-8">
+        <main class="py-8">
             <slot />
         </main>
 
         <!-- Footer -->
-        <footer class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-800 mt-16">
+        <footer class="bg-white/80 backdrop-blur-md border-t border-gray-100 mt-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div class="text-center">
-                    <p class="text-sm font-light text-gray-600 dark:text-gray-400">
-                        © 2025 MiniBlog • Créé avec Laravel & Vue.js
-                    </p>
+                <div class="text-center text-gray-600">
+                    <p class="text-sm">© 2025 MiniBlog - Créé avec ❤️ avec Laravel & Vue.js</p>
                 </div>
             </div>
         </footer>
