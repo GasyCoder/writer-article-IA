@@ -32,6 +32,12 @@ class Article extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Alias pour la relation user (pour une meilleure sémantique)
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     // Un article appartient à une catégorie
     public function category(): BelongsTo
     {
