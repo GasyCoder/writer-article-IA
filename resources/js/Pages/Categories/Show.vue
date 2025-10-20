@@ -10,111 +10,115 @@ const props = defineProps({
 
 <template>
     <AppLayout>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="max-w-7xl mx-auto py-12">
             <!-- En-tête de la catégorie -->
             <div class="mb-12">
-                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg p-8 text-white">
-                    <div class="flex items-center mb-4">
-                        <Link href="/categories" class="text-white/80 hover:text-white transition-colors mr-4">
-                            ← Retour aux catégories
-                        </Link>
-                    </div>
-                    <div class="text-6xl mb-4">📂</div>
-                    <h1 class="text-4xl font-extrabold mb-3">
-                        {{ category.name }}
-                    </h1>
-                    <p v-if="category.description" class="text-xl text-white/90">
-                        {{ category.description }}
-                    </p>
-                    <div class="mt-6 text-white/80">
-                        {{ articles.total }} article{{ articles.total > 1 ? 's' : '' }} dans cette catégorie
+                <Link href="/categories" class="inline-flex items-center text-sm font-light text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors mb-6">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Retour aux catégories
+                </Link>
+
+                <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-8 border border-gray-200 dark:border-gray-800">
+                    <div class="flex items-start">
+                        <svg class="w-12 h-12 text-gray-400 dark:text-gray-600 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <div>
+                            <h1 class="text-4xl md:text-5xl font-light text-gray-900 dark:text-white mb-3">
+                                {{ category.name }}
+                            </h1>
+                            <p v-if="category.description" class="text-lg font-light text-gray-600 dark:text-gray-400 mb-4">
+                                {{ category.description }}
+                            </p>
+                            <div class="text-sm font-light text-gray-500 dark:text-gray-500">
+                                {{ articles.total }} {{ articles.total > 1 ? 'articles' : 'article' }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Grille d'articles -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                 <article
                     v-for="article in articles.data"
                     :key="article.id"
-                    class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                    class="bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 border border-gray-200 dark:border-gray-800 group"
                 >
                     <!-- Image -->
-                    <div class="h-48 bg-gradient-to-br from-indigo-400 to-purple-500 relative">
-                        <img
-                            v-if="article.image"
-                            :src="`/storage/${article.image}`"
-                            :alt="article.title"
-                            class="w-full h-full object-cover"
-                        >
-                        <div v-else class="w-full h-full flex items-center justify-center">
-                            <span class="text-white text-6xl">📝</span>
+                    <Link :href="`/articles/${article.slug}`" class="block">
+                        <div class="h-48 bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                            <img
+                                v-if="article.image"
+                                :src="`/storage/${article.image}`"
+                                :alt="article.title"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            >
+                            <div v-else class="w-full h-full flex items-center justify-center">
+                                <svg class="w-16 h-16 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
                         </div>
-                    </div>
+                    </Link>
 
                     <!-- Contenu -->
                     <div class="p-6">
                         <!-- Titre -->
                         <Link :href="`/articles/${article.slug}`">
-                            <h2 class="text-xl font-bold text-gray-900 mb-2 hover:text-indigo-600 transition-colors line-clamp-2">
+                            <h2 class="text-xl font-light text-gray-900 dark:text-white mb-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors line-clamp-2">
                                 {{ article.title }}
                             </h2>
                         </Link>
 
                         <!-- Extrait -->
-                        <p v-if="article.excerpt" class="text-gray-600 mb-4 line-clamp-3">
+                        <p v-if="article.excerpt" class="text-gray-600 dark:text-gray-400 font-light text-sm mb-4 line-clamp-3">
                             {{ article.excerpt }}
                         </p>
 
                         <!-- Métadonnées -->
-                        <div class="flex items-center justify-between text-sm text-gray-500">
+                        <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-500 font-light pt-4 border-t border-gray-100 dark:border-gray-800">
                             <div class="flex items-center space-x-2">
-                                <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
-                                    <span class="text-white text-xs font-bold">{{ article.user.name.charAt(0) }}</span>
+                                <div class="w-6 h-6 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                                    <span class="text-gray-700 dark:text-gray-300 text-xs">{{ article.user.name.charAt(0) }}</span>
                                 </div>
                                 <span>{{ article.user.name }}</span>
                             </div>
-                            <span>{{ new Date(article.created_at).toLocaleDateString('fr-FR') }}</span>
+                            <time>{{ new Date(article.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) }}</time>
                         </div>
-                    </div>
-
-                    <!-- Bouton Lire -->
-                    <div class="px-6 pb-6">
-                        <Link
-                            :href="`/articles/${article.slug}`"
-                            class="block w-full text-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-xl font-medium hover:shadow-lg transition-all"
-                        >
-                            Lire l'article
-                        </Link>
                     </div>
                 </article>
             </div>
 
             <!-- Message si aucun article -->
-            <div v-if="articles.data.length === 0" class="text-center py-16 bg-white rounded-2xl shadow-lg">
-                <div class="text-6xl mb-4">📭</div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-2">Aucun article dans cette catégorie</h3>
-                <p class="text-gray-600 mb-6">Revenez bientôt pour découvrir de nouveaux contenus !</p>
+            <div v-if="articles.data.length === 0" class="text-center py-16 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800">
+                <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 class="text-xl font-light text-gray-900 dark:text-white mb-2">Aucun article dans cette catégorie</h3>
+                <p class="text-gray-600 dark:text-gray-400 font-light mb-6">Revenez bientôt pour découvrir de nouveaux contenus</p>
                 <Link
                     href="/articles"
-                    class="inline-block bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition-all"
+                    class="inline-block bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-2 rounded-lg font-light hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
                 >
                     Voir tous les articles
                 </Link>
             </div>
 
             <!-- Pagination -->
-            <div v-if="articles.links.length > 3" class="flex justify-center space-x-2">
+            <div v-if="articles.links.length > 3" class="flex justify-center items-center space-x-2">
                 <Link
                     v-for="(link, index) in articles.links"
                     :key="index"
                     :href="link.url"
                     :class="{
-                        'bg-indigo-600 text-white': link.active,
-                        'bg-white text-gray-700 hover:bg-gray-50': !link.active,
+                        'bg-gray-900 dark:bg-white text-white dark:text-gray-900': link.active,
+                        'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800': !link.active,
                         'cursor-not-allowed opacity-50': !link.url
                     }"
-                    class="px-4 py-2 rounded-lg border border-gray-300 transition-colors"
+                    class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-800 transition-colors text-sm font-light"
                     v-html="link.label"
                 />
             </div>
