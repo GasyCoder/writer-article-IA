@@ -4,7 +4,7 @@ import '../css/app.css';
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-// import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import { route } from './route';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -14,10 +14,18 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)
-            // .use(ZiggyVue)
+            .provide('route', route)
+            .mixin({
+                methods: {
+                    route
+                }
+            })
             .mount(el);
     },
     progress: {
         color: '#4F46E5',
     },
 });
+
+// Make route globally available
+window.route = route;
