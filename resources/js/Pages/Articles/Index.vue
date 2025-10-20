@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Link } from '@inertiajs/vue3';
+import { calculateReadingTime } from '@/Utils/readingTime';
 
 const props = defineProps({
     articles: Object,
@@ -74,7 +75,11 @@ const props = defineProps({
                                 </div>
                                 <span>{{ article.user.name }}</span>
                             </div>
-                            <time>{{ new Date(article.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) }}</time>
+                            <div class="flex items-center space-x-2">
+                                <span>{{ calculateReadingTime(article.content) }}</span>
+                                <span>•</span>
+                                <time>{{ new Date(article.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) }}</time>
+                            </div>
                         </div>
                     </div>
                 </article>
