@@ -32,7 +32,7 @@ const handleImageChange = (event) => {
 };
 
 const submit = () => {
-    form.post(`/admin/articles/${props.article.id}`, {
+    form.put(`/admin/articles/${props.article.id}`, {
         forceFormData: true,
         preserveScroll: true,
         onSuccess: () => {
