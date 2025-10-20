@@ -33,8 +33,18 @@ class ArticleController extends Controller
             ->where('published', true)
             ->firstOrFail();
 
+        // Récupérer les articles connexes (même catégorie, excluant l'article actuel)
+        $relatedArticles = Article::with(['user', 'category'])
+            ->where('category_id', $article->category_id)
+            ->where('id', '!=', $article->id)
+            ->where('published', true)
+            ->latest()
+            ->take(3)
+            ->get();
+
         return Inertia::render('Articles/ArticleShow', [
-            'article' => $article
+            'article' => $article,
+            'relatedArticles' => $relatedArticles
         ]);
     }
 }

@@ -3,12 +3,18 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { useForm, Link } from '@inertiajs/vue3';
 import { marked } from 'marked';
 import { computed } from 'vue';
+import { useReadingTime } from '@/Composables/useReadingTime';
 
 const props = defineProps({
     article: Object,
+    relatedArticles: {
+        type: Array,
+        default: () => []
+    }
 });
 
 const contentHtml = computed(() => marked(props.article.content));
+const readingTime = computed(() => useReadingTime(props.article.content));
 
 const form = useForm({
     content: '',
@@ -54,7 +60,7 @@ const submitComment = () => {
                     </h1>
 
                     <!-- Métadonnées -->
-                    <div class="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400 mb-8 pb-8 border-b border-gray-200 dark:border-gray-800">
+                    <div class="flex items-center flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-400 mb-8 pb-8 border-b border-gray-200 dark:border-gray-800">
                         <div class="flex items-center space-x-2">
                             <div class="w-8 h-8 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center">
                                 <span class="text-white dark:text-gray-900 font-light text-sm">{{ article.user.name.charAt(0) }}</span>
@@ -63,6 +69,8 @@ const submitComment = () => {
                         </div>
                         <span>•</span>
                         <time class="font-light">{{ new Date(article.created_at).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }) }}</time>
+                        <span>•</span>
+                        <span class="font-light">{{ readingTime }} lecture</span>
                         <span>•</span>
                         <span class="font-light">{{ article.comments.length }} {{ article.comments.length > 1 ? 'commentaires' : 'commentaire' }}</span>
                     </div>
@@ -74,6 +82,66 @@ const submitComment = () => {
                     />
                 </div>
             </article>
+
+            <!-- Articles connexes -->
+            <div v-if="relatedArticles.length > 0" class="mb-8">
+                <h2 class="text-2xl font-light text-gray-900 dark:text-white mb-6">Articles connexes</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <article
+                        v-for="relatedArticle in relatedArticles"
+                        :key="relatedArticle.id"
+                        class="bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 border border-gray-200 dark:border-gray-800 group"
+                    >
+                        <!-- Image -->
+                        <Link :href="`/articles/${relatedArticle.slug}`" class="block relative">
+                            <div class="h-40 bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                                <img
+                                    v-if="relatedArticle.image"
+                                    :src="`/storage/${relatedArticle.image}`"
+                                    :alt="relatedArticle.title"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                >
+                                <div v-else class="w-full h-full flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Badge catégorie -->
+                            <div class="absolute top-3 left-3">
+                                <span class="inline-block px-2 py-1 rounded-full text-xs font-light bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300">
+                                    {{ relatedArticle.category.name }}
+                                </span>
+                            </div>
+                        </Link>
+
+                        <!-- Contenu -->
+                        <div class="p-5">
+                            <h3 class="text-lg font-light text-gray-900 dark:text-white mb-2 line-clamp-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                                <Link :href="`/articles/${relatedArticle.slug}`">
+                                    {{ relatedArticle.title }}
+                                </Link>
+                            </h3>
+
+                            <p class="text-gray-600 dark:text-gray-400 font-light text-sm mb-3 line-clamp-2">
+                                {{ relatedArticle.excerpt || 'Cliquez pour lire cet article...' }}
+                            </p>
+
+                            <!-- Infos -->
+                            <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-500 font-light pt-3 border-t border-gray-100 dark:border-gray-800">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-5 h-5 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                                        <span class="text-gray-700 dark:text-gray-300 text-xs">{{ relatedArticle.user.name.charAt(0) }}</span>
+                                    </div>
+                                    <span>{{ relatedArticle.user.name }}</span>
+                                </div>
+                                <span class="font-light">{{ useReadingTime(relatedArticle.content) }} lecture</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
 
             <!-- Section Commentaires -->
             <div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-8 border border-gray-200 dark:border-gray-800">
