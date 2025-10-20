@@ -12,6 +12,7 @@ const routes = {
     'password.reset': '/reset-password',
     'verification.notice': '/verify-email',
     'logout': '/logout',
+    'dashboard': '/dashboard',
     'profile.edit': '/profile',
     'profile.update': '/profile',
     'profile.destroy': '/profile',
@@ -34,9 +35,37 @@ const routes = {
  * Generate a URL for a named route
  * @param {string} name - The route name
  * @param {object|string|number} params - Route parameters (can be an object or a single value)
- * @returns {string} The generated URL
+ * @returns {string|object} The generated URL or route helper object
  */
 export function route(name, params = {}) {
+    // If called without arguments, return an object with helper methods
+    if (name === undefined) {
+        return {
+            current: (routeName = null) => {
+                const currentPath = window.location.pathname;
+
+                // If no route name provided, return the current route name
+                if (routeName === null) {
+                    for (const [name, path] of Object.entries(routes)) {
+                        if (currentPath === path || currentPath.startsWith(path + '/')) {
+                            return name;
+                        }
+                    }
+                    return null;
+                }
+
+                // If route name provided, check if current route matches
+                const routePath = routes[routeName];
+                if (!routePath) {
+                    return false;
+                }
+
+                // Exact match or starts with route path (for dynamic routes)
+                return currentPath === routePath || currentPath.startsWith(routePath + '/');
+            }
+        };
+    }
+
     let url = routes[name];
 
     if (!url) {
