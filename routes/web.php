@@ -24,6 +24,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/articles/{article}/comments', [CommentController::class, 'store'])->name('comments.store');
 });
 
+// Dashboard utilisateur
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return inertia('Dashboard');
+    })->name('dashboard');
+});
+
 // Routes Breeze (profil utilisateur)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
